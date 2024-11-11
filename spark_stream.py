@@ -17,9 +17,13 @@ def insert_data(session, **kwargs):
     #insertion here
 
 def create_spark_connection():
-    #creating spark connection
+    try:
+        s_conn = SparkSession.builder \
+        .appName()
 
 def create_cassandra_connection():
     # creating cassandra connection
 
 
+if __name__ == "__main__":
+    spark_conn = create_spark_connection()

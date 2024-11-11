@@ -1,5 +1,5 @@
 from datetime import datetime
-from sys import api_version
+
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
@@ -20,7 +20,7 @@ def get_data():
 
     response = requests.get(url)
     response = response.json()
-    response = response['articles']
+    response = response['articles'][1:]
     return response
 
 def format_data(response):
@@ -59,10 +59,13 @@ def stream_data():
 
             producer.send('users_created', json.dumps(res).encode('utf-8'))
 
+            time.sleep(2)
+
         except Exception as e:
             logging.error(f"An error occurred: {e}")
             continue
 
+#stream_data()
 
 with DAG('user-automation',
          default_args = default_args,
