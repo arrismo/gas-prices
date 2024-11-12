@@ -60,9 +60,9 @@ def create_spark_connection():
     try:
         s_conn = SparkSession.builder \
             .appName('SparkDataStreaming') \
-            .config('spark.jars.packages',"com.datastax.spark:spark-cassandra-connector_2.12:3.5.1,"
-                                          "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1,") \
-            .config('spark.cassandra.connection.host', 'localhost') \
+            .config('spark.jars.packages',"com.datastax.spark:spark-cassandra-connector_2.12:3.4.1,"
+                                          "org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1,") \
+            .config('spark.cassandra.connection.host', 'cassandra') \
             .getOrCreate()
 
         s_conn.sparkContext.setLogLevel("ERROR")
@@ -123,6 +123,7 @@ def create_selection_df_from_kafka(spark_df):
 if __name__ == "__main__":
     #create spark connection
     spark_conn = create_spark_connection()
+    authentication = PlainTextAuthProvider(username='admin', password='admin')
 
     if spark_conn is not None:
         # connect ot kafka with spark connection
@@ -133,7 +134,7 @@ if __name__ == "__main__":
         if session is not None:
             create_keyspace(session)
             create_table(session)
-            #insert_data(session)
+            logging.info("Streaming is being started...")
             streaming_query = (selection_df.writeStream.format('org.apache.spark.sql.cassandra')
                              .option("checkpointLocation", '/tmp/checkpoint')
                              .option('keyspace', 'spark_streams')
