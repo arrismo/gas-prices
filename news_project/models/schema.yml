@@ -1,0 +1,16 @@
+
+version: 2
+
+sources:
+  - name: public
+    schema: public
+    tables:
+      - name: articledata
+
+models:
+  - name: articles
+    columns:
+      - name: source
+        tests:
+          - not_null
+          - unique
