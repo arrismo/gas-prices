@@ -1,2 +1,4 @@
 /newsenv
 .env
+/__pycache__
+/logs
