@@ -1,2 +1,1 @@
-# gas-prices
-Realtime Data Streaming pipeline using Gas Prices API
+# News Article Pipeline and Analysis
