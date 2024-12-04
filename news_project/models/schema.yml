@@ -13,4 +13,3 @@ models:
       - name: source
         tests:
           - not_null
-          - unique

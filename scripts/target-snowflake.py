@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import pandas as pd
 from snowflake.connector.pandas_tools import write_pandas
 
-df = pd.read_csv('data/output.csv')
+df = pd.read_csv('data/output_with_sentiment.csv')
 df = pd.DataFrame(df)
 df.columns = df.columns.str.upper()
 
