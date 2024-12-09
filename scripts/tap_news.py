@@ -36,7 +36,8 @@ def format_data(response):
         }
         data.append(processed_article)
     df_list = pd.DataFrame(data)    
-    df_list.to_csv('output.csv',index= False)
+    current_date = datetime.now().strftime("%Y-%m-%d")
+    df_list.to_csv(f'output{current_date}.csv',index= False)
     return data
 
 

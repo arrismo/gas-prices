@@ -3,8 +3,11 @@ import os
 from dotenv import load_dotenv
 import pandas as pd
 from snowflake.connector.pandas_tools import write_pandas
+from datetime import datetime
 
-df = pd.read_csv('data/output_with_sentiment.csv')
+
+current_date = datetime.now().strftime("%Y-%m-%d")
+df = pd.read_csv(f'data/output_with_sentiment{current_date}.csv')
 df = pd.DataFrame(df)
 df.columns = df.columns.str.upper()
 

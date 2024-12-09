@@ -1,8 +1,11 @@
 from textblob import TextBlob
 import pandas as pd
+from datetime import datetime
+
 
 # Read the CSV file into a DataFrame
-raw_df = pd.read_csv('data/output.csv')
+current_date = datetime.now().strftime("%Y-%m-%d")
+raw_df = pd.read_csv(f'data/output{current_date}.csv')
 pandas_df = pd.DataFrame(raw_df)
 
 # Define the sentiment analysis function for a single description
@@ -21,4 +24,4 @@ pandas_df['sentiment'] = pandas_df['description'].apply(get_article_sentiment)
 # View the DataFrame with the new sentiment column
 #print(pandas_df[['description', 'sentiment']])
 
-pandas_df.to_csv('data/output_with_sentiment.csv', index=False)
+pandas_df.to_csv(f'data/output_with_sentiment{current_date}.csv', index=False)
