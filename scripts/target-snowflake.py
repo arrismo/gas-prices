@@ -7,7 +7,8 @@ from datetime import datetime
 
 
 current_date = datetime.now().strftime("%Y-%m-%d")
-df = pd.read_csv(f'data/output_with_sentiment{current_date}.csv')
+df = pd.read_csv(f'data/output_with_sentiment_{current_date}.csv',   sep=',', quotechar='"', header=0)
+df['author'] = df['author'].str.replace('\n', ' ').str[:100]
 df = pd.DataFrame(df)
 df.columns = df.columns.str.upper()
 
