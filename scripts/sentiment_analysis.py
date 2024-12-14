@@ -1,6 +1,8 @@
 import pandas as pd
 from textblob import TextBlob
 from datetime import datetime
+#import nltk
+#nltk.download("punkt")
 
 def get_article_sentiment(description):
     """
@@ -16,41 +18,56 @@ def get_article_sentiment(description):
     
     # Perform sentiment analysis
     analysis = TextBlob(description)
-    
-    if analysis.sentiment.polarity > 0:
-        return 'positive'
-    elif analysis.sentiment.polarity == 0:
-        return 'neutral'
+    sentiment_score = round(analysis.sentiment.polarity * 100, 2)
+        
+    if sentiment_score > 0:
+        sentiment_label =  'positive'
+    elif sentiment_score == 0:
+        sentiment_label = 'neutral'
     else:
-        return 'negative'
+        sentiment_label = 'negative'
+        
+    return sentiment_score, sentiment_label
+
+
+def get_word_count(title,word):
+    # Simple, safe word counting method
+    if not isinstance(title, str):
+        return 0
+    return title.lower().count(word.lower())
+    
+
 
 def main():
     # Read the CSV file into a DataFrame
     current_date = datetime.now().strftime("%Y-%m-%d")
     
     # Read the CSV file, explicitly dropping the index column if present
-    df = pd.read_csv(f'data/output_{current_date}.csv', index_col=0)
+    df = pd.read_csv(f'data/combined_output.csv')
     
     # Reset the index to ensure clean dataframe
-    df = df.reset_index(drop=True)
+    # df = df.reset_index(drop=True)
     
     # Apply sentiment analysis
-    df['sentiment'] = df['description'].apply(get_article_sentiment)
+    sentiment_results = df['description'].apply(get_article_sentiment)
+    df['sentiment'] = sentiment_results.apply(lambda x: x[1])
+    df['sentiment_score'] = sentiment_results.apply(lambda x: x[0])
     
+    companies = [
+        'google', 'openai', 'microsoft', 'tiktok', 
+        'apple', 'amazon', 'nvidia', 'amd', 'anthropic'
+    ]
+    
+    # Count company names in titles
+    for company in companies:
+        df[f'{company}_count'] = df['title'].apply(lambda x: get_word_count(x, company))
+       
+    
+    
+        
     # Save the updated DataFrame
-    output_filename = f'data/output_with_sentiment_{current_date}.csv'
+    output_filename = f'data/output_with_sentiment.csv'
     df.to_csv(output_filename, index=False)
-    
-    # Print sentiment su""" mmary
-    # print("Sentiment Analysis Summary:")
-    # print(df['sentiment'].value_counts())
-    
-    # # Optional: Print detailed sentiment analysis
-    # print("\nDetailed Sentiment Breakdown:")
-    # for index, row in df.iterrows():
-    #     print(f"\nTitle: {row['title']}")
-    #     print(f"Description: {row['description']}")
-    #     print(f"Sentiment: {row['sentiment']}") """
 
 if __name__ == "__main__":
     main()
